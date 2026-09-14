@@ -1,23 +1,21 @@
 # Computer-Use Automation System
 
-A small, real end-to-end system for interface.ai's take-home: an LLM discovers how to accomplish a
-goal against a live UI, the successful run is recorded as a typed, reusable **capability
-artifact**, and that artifact is replayed **deterministically** (no LLM) in production, with
-explicit handling of business outcomes, recoverable conditions, and hard failures — including a
+The LLM discovers how to accomplish a goal against a live UI, the successful run is recorded as a typed,
+reusable **capability artifact**, and that artifact is replayed **deterministically** (no LLM) in production, 
+with explicit handling of business outcomes, recoverable conditions, and hard failures — including a
 real human-in-the-loop escalation and control-handoff path.
 
-See `/REPORT.md` for the design write-up (architecture, artifact schema, determinism & error
+`/REPORT.md` contains the design write-up (architecture, artifact schema, determinism & error
 handling, heterogeneity/multi-tenant story, escalation model, safety model, and cuts).
 
 ## Stack
 
-- TypeScript + Node, run directly via [`tsx`](https://github.com/privatenumber/tsx) (no build step needed for the demo).
-- [Playwright](https://playwright.dev/) (Chromium) for browser automation.
-- OpenAI (`gpt-4o` by default) for the discovery agent's decision loop.
-- The proxy target is a small **mock legacy core-banking console** included in this repo
-  (`src/target-app`) — a server-rendered app with nested tables, no test ids, and no semantic
-  markup, deliberately styled after the "legacy web app" case described in the brief. There is no
-  need for a real bank system, a public site, or any credentials.
+- TypeScript + Node
+- [Playwright](https://playwright.dev/) (Chromium) for browser automation
+- OpenAI (`gpt-4o` by default) for the discovery agent's decision loop
+- The proxy target is a small **mock legacy core-banking console** included in this repo 
+  — a server-rendered app with nested tables, no test ids, and no semantic
+  markup, styled after the "legacy web app" case.
 
 ## Setup
 
@@ -27,14 +25,14 @@ npx playwright install chromium   # one-time browser download
 cp .env.example .env
 ```
 
-Edit `.env` and set `OPENAI_API_KEY` to your own key. Everything else has a sensible default:
+Edit `.env` and set `OPENAI_API_KEY` to your own key.
 
 ```ini
 OPENAI_API_KEY=sk-...
 OPENAI_MODEL=gpt-4o
 TARGET_APP_PORT=4000
 OPERATOR_PORT=4001
-HEADED=true          # set to "false" to run the browser headless
+HEADED=true   # set to false for headless mode
 ```
 
 `HEADED=true` opens a visible Chromium window so you can watch the agent work — this is also what
@@ -43,12 +41,11 @@ via the operator console, described below).
 
 ### Running without live services
 
-- The **target app** is fully local and self-contained (`npm run target-app`) — no external
-  service, no network access, no real data.
+- The **target app** is fully local and self-contained (`npm run target-app`).
 - **Deterministic replay** (`npm run replay`) never calls an LLM and needs no API key at all — only
-  the target app running locally. This is the path meant to run unattended/at scale.
+  the target app running locally.
 - Only **discovery** (`npm run discover`) needs `OPENAI_API_KEY`, since that's the one place a real
-  model has to be in the loop (by design — see the brief's "the discovery run has to be real").
+  model has to be in the loop (by design).
 
 ## Demo path
 
@@ -103,7 +100,7 @@ new target-app route each time:
 
 - `--inject interstitial`: the target app shows an unexpected-but-*known* "session renewed"
   interstitial. The artifact already has a detector + auto-dismiss action for it, so replay
-  recovers **without** any human involvement — the "recoverable condition" tier.
+  recovers **without** any human involvement.
 - `--inject outage`: the target app shows a "temporarily unavailable" page the artifact has
   **no** detector for — a genuine unknown state. Replay escalates to a human operator:
 
@@ -144,7 +141,7 @@ covering every path described above:
 npm test
 ```
 
-Unit tests cover the pure-logic modules where correctness matters most and doesn't require a
+Unit tests cover the pure-logic modules and doesn't require a
 browser: the policy engine's risk classification and confirmation gating, redaction, and
 input-parameter validation/coercion.
 

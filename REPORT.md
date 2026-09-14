@@ -2,9 +2,8 @@
 
 ## 1. Architecture
 
-Single Node/TypeScript process, no queues or services — the brief explicitly says premature
-scaling infrastructure isn't rewarded, and nothing here needs it yet. Six modules, each owning one
-concern:
+Single Node/TypeScript process.
+Six modules, each owning one concern:
 
 - **`observation`** — perceives the surface and turns it into a compact "accessibility-flavored"
   snapshot (role, accessible name, candidate locator strategies) and resolves a locator strategy
@@ -23,12 +22,11 @@ concern:
 - **`guardrails`** — the allowlist and risk-classification policy, redaction.
 - **`escalation`** — a control-transfer state machine plus a minimal operator console.
 
-Key trade-off: I run the browser **headed** and put automation and the operator console **in the
+Key trade-off: I run the browser **headed** and put the automation and the operator console **in the
 same process, sharing the same `Page` object**. That one decision is what makes "the human operates
 the same live session, not a fresh one" true by construction rather than by careful bookkeeping —
 escalation just blocks the calling coroutine on a promise; there's no session hand-off protocol to
-get wrong. The cost is that this doesn't scale past one concurrent run per process, which is fine
-for this project and explicitly out of scope to fix (Section 7).
+get wrong. The cost is that this doesn't scale past one concurrent run per process.
 
 ## 2. Artifact schema
 
@@ -49,8 +47,7 @@ contract**, not a step recording:
 - `riskLevel` (category) and per-step `risk` (derived, see Section 6), plus `status: draft |
   approved` — versioned artifacts are stored as `<id>.v<N>.json` with a `<id>.latest.json` pointer.
 
-Locators are the part I went deepest on, because "how you tell automation which control to act on"
-is called out explicitly as the crux of the assignment. A step's `target` is a small ordered list
+Locators are the part I went deepest on, because. A step's `target` is a small ordered list
 of independent strategies (`role`, `css`, `text`, `tableCell`), tried in order at replay time until
 one resolves — not because any single one is unreliable, but because *which one is reliable depends
 on what the element actually is*, and that's knowable at record time but not guessable from outside.
@@ -60,19 +57,18 @@ on what the element actually is*, and that's knowable at record time but not gue
 Replay never calls an LLM; every action comes from the artifact, and the only branching is what the
 artifact itself declares (checkpoints, business outcomes, interstitials). Determinism here is less
 about "the code has no randomness" and more about **getting the locator strategy right**, which
-turned out to be the majority of real bugs during development — worth being concrete about, since
-they're exactly the class of bug the brief is asking me to reason about:
+turned out to be the majority of real bugs during development:
 
 - A browser's real *accessible name* computation does **not** use a form control's HTML `name`
   attribute. A legacy `<input name="q">` with no label has an accessible name of `""`, so a
-  `role=textbox name="q"` locator silently resolves to nothing. Fix: separate "real accessible
-  name" (aria-label, placeholder, or — for links/buttons/headings — visible text/value) from the
-  raw `name` attribute, and only use the raw attribute for a scoped `[name=...]` CSS fallback,
+  `role=textbox name="q"` locator silently resolves to nothing. 
+  Fix: separate "real accessible name" (aria-label, placeholder, or — for links/buttons/headings — visible text/value) 
+  from the raw `name` attribute, and only use the raw attribute for a scoped `[name=...]` CSS fallback,
   never for role or text matching.
 - Text-substring matching (`getByText`) is only safe for elements whose visible content *is* their
   name. Used against an unlabeled `<select name="type">`, it matched a `<td>Account Type</td>` label
-  cell elsewhere on the page instead. Fix: the `text` strategy is only ever generated when a real
-  accessible name exists.
+  cell elsewhere on the page instead. 
+  Fix: the `text` strategy is only ever generated when a real accessible name exists.
 - Extracting a data cell from a legacy table needed a `tableCell` strategy (find the row containing
   a label cell, take the sibling at a column index) — but the naive version used substring `hasText`
   matching, which under **nested** tables (the norm for this kind of legacy layout) matched an
@@ -120,16 +116,15 @@ values (Section 2) mean a URL like `/members/12345` is already recorded as
 `{ literal: "http://tenant-a.example.com/members" } + { param: "memberId" }` at the navigate/type
 level — the "canonicalize `/item/12345` → `/item/:id`" idea from the stretch goals is close to
 free here rather than a separate pass. For two tenants running the *same* vendor product,
-configured/branded differently, the design I'd build (not built here — explicitly out of scope per
-the brief) is a **base artifact + per-tenant overrides**: the base recording stays as-is; an
-override file for a given tenant patches specific fields (a `LocatorStrategy` whose text differs
-under different branding, an added/removed interstitial, a different base URL) without
-re-recording the flow. Drift detection is a natural extension of `resolveLocator`'s existing
-attempt log (`ResolveAttempt[]`, already returned on every resolution): running the same artifact
-against many tenant instances and tracking which fallback strategy actually won, per tenant, turns
-into a health signal for free — a strategy that used to resolve via `role` and now only resolves via
-the `css` fallback (or not at all) for one tenant is exactly the "per-tenant/version drift" signal
-to flag for review, without needing new instrumentation.
+configured/branded differently, the design I'd build is a **base artifact + per-tenant overrides**: 
+the base recording stays as-is; an override file for a given tenant patches specific fields 
+(a `LocatorStrategy` whose text differs under different branding, an added/removed interstitial, 
+a different base URL) without re-recording the flow. Drift detection is a natural extension of 
+`resolveLocator`'s existing attempt log (`ResolveAttempt[]`, already returned on every resolution): 
+running the same artifact against many tenant instances and tracking which fallback strategy actually 
+won, per tenant, turns into a health signal for free — a strategy that used to resolve via `role` and 
+now only resolves via the `css` fallback (or not at all) for one tenant is exactly the 
+"per-tenant/version drift" signal to flag for review, without needing new instrumentation.
 
 ## 5. Escalation & handoff
 
@@ -151,8 +146,7 @@ discovery re-observes and continues its normal loop; replay re-attempts the *spe
 re-checks the *specific* checkpoint that failed, not the whole flow — the human is fixing a
 localized problem (dismiss a dialog, retry a page), not restarting the capability.
 
-What's real: the same-session guarantee, the state machine, the recorded human actions, and the
-resumption semantics. What's mocked: the console itself is a plain form (click/type/navigate by
+The operator console is a plain form (click/type/navigate by
 role+name), not a rendered co-browsing view with cursor/DOM diffing — explicitly out of scope.
 
 ## 6. Safety
@@ -195,16 +189,12 @@ JSONL log.
 
 - **Desktop / legacy-frameset support**: designed (Section 4), not implemented — the brief doesn't
   expect it.
-- **Multi-tenant override/drift infrastructure**: designed, not built — explicitly out of scope
-  ("we don't expect you to implement multi-tenant... we do expect the core abstractions not to
-  paint you into a corner").
+- **Multi-tenant override/drift infrastructure**: designed, not built — explicitly out of scope.
 - **Review-time enrichment (`harden.ts`) is simulated**, not a real reviewer workflow — it's a
-  hardcoded, id-keyed dictionary, and its own brittleness (ids aren't stable across LLM runs) is
-  called out directly in its code comments rather than papered over.
-- **Operator console** is a bare form, not a co-browsing view — explicitly in-scope to mock.
-- **Assisted LLM fallback on replay failure** (a stretch goal) was deliberately not built: given a
-  choice between spending remaining time on that or on making the human-escalation path fully real,
-  I chose the latter, since the brief weighs escalation ahead of stretch goals.
+  hardcoded, id-keyed dictionary.
+- **Operator console** is a bare form, not a co-browsing view.
+- **Assisted LLM fallback on replay failure** given a choice between spending remaining time on that 
+  or on making the human-escalation path fully real, I chose the latter.
 - **Confidence/approval scoring** beyond the binary `draft`/`approved` gate, and **multi-run
   stability** testing (stretch goals) — not attempted, in favor of depth on the required core.
 - Small, honest gap: `open-savings-sub-account`'s discovery run never declared an output (e.g. the
