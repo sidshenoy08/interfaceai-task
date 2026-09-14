@@ -1,0 +1,14 @@
+{
+  "runs": 1,
+  "successes": 1,
+  "score": 1,
+  "results": [
+    {
+      "runId": "2026-09-14T22-34-04-280Z-k7bibn",
+      "status": "success",
+      "detail": "success",
+      "evidenceDir": "/Users/siddharthshenoy/Desktop/Personal Projects/interfaceai/evidence/replay-2026-09-14T22-34-04-280Z-k7bibn"
+    }
+  ],
+  "evidenceDir": "/Users/siddharthshenoy/Desktop/Personal Projects/interfaceai/evidence/stability-2026-09-14T22-34-04-279Z-vgmfhu"
+}

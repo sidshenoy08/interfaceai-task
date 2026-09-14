@@ -116,6 +116,33 @@ confirm the real page loads, then click **Resume automation**. Replay re-attempt
 that failed and continues from there. The human's action is recorded in the run's evidence log
 alongside everything the agent did.
 
+### Stretch goal: confidence & multi-run stability
+
+Replays the same artifact with the same inputs `N` times (no LLM — this is pure replay), reports a
+success-rate confidence score, and updates the artifact's `status` from it. This replaces the
+`draft`/`approved` gate's previous static "does it have an irreversible step?" heuristic with real
+replay evidence, and the deterministic-replay gate in `replay/executor.ts` now also blocks
+unattended replay of an artifact whose recorded confidence is below the bar (`>= 3` runs, `100%`
+success) — independently of the irreversible-step check that was already there.
+
+```bash
+# lookup-member-balance has no irreversible step: 3/3 clean runs -> auto-approved.
+npm run stability -- --artifact lookup-member-balance --runs 3 --input memberId=12345
+
+# open-savings-sub-account has an irreversible step: even a perfect 3/3 score
+# leaves it in "draft" — reliability alone doesn't waive human sign-off for that class.
+npm run stability -- --artifact open-savings-sub-account --runs 3 --input memberId=12345 --input initialDeposit=250
+
+# A single run isn't enough evidence: this demotes a previously-approved
+# artifact back to "draft" and the next unattended replay is blocked for it,
+# same as the irreversible-step case above.
+npm run stability -- --artifact lookup-member-balance --runs 1 --input memberId=12345
+npm run replay -- --artifact lookup-member-balance --input memberId=12345   # blocked
+```
+
+Each individual replay still gets its own `evidence/replay-.../` directory; the stability command
+additionally writes an aggregate `evidence/stability-.../report.json` tying the sample together.
+
 ## Evidence in this repo
 
 `/evidence` already contains real runs (structured JSONL logs + screenshots) from development,
@@ -133,7 +160,13 @@ covering every path described above:
 | `replay-...-kptkf7` | `open-savings-sub-account` — business outcome (`invalid_deposit`), approved via `--confirm-irreversible` |
 | `replay-...-s0u87f` | `open-savings-sub-account` — full success, actually opens the account |
 
-`/artifacts` contains the two saved capability artifacts referenced above.
+Also present, from the stability/confidence demo above: four `evidence/stability-.../report.json`
+runs (a 3/3 approval, a 3/3 that stays `draft` because it's irreversible, a 1-run demotion, and the
+re-approval after another 3/3), plus one more `evidence/replay-.../` showing the resulting
+`config_error` block on an unattended replay of the demoted artifact.
+
+`/artifacts` contains the two saved capability artifacts referenced above, now carrying a
+`confidence` block from the stability runs.
 
 ## Tests
 
@@ -153,7 +186,8 @@ src/
   observation/    surface perception: accessibility-flavored snapshot + locator resolution
   agent/          discovery loop: LLM tool-calling against the live page
   artifact/       capability artifact schema, storage/versioning, review-time enrichment
-  replay/         deterministic replay engine, condition evaluation, param validation
+  replay/         deterministic replay engine, condition evaluation, param validation,
+                  multi-run stability check + confidence-based approval gate (stretch goal)
   guardrails/     allowlist + risk policy, redaction
   escalation/     control-transfer state machine + operator console
   evidence/       structured run logging

@@ -1,0 +1,2 @@
+{"ts":"2026-09-14T22:34:04.279Z","runId":"2026-09-14T22-34-04-279Z-vgmfhu","type":"info","detail":{"event":"stability_start","capability":"lookup-member-balance","version":1,"runs":1,"params":{"memberId":"12345"}}}
+{"ts":"2026-09-14T22:34:04.573Z","runId":"2026-09-14T22-34-04-279Z-vgmfhu","type":"result","detail":{"event":"run_complete","run":0,"status":"success","detail":"success"}}

@@ -14,6 +14,7 @@ import { redactFieldValue } from "../guardrails/redaction.js";
 import { EvidenceLogger, newRunId } from "../evidence/logger.js";
 import { EscalationController } from "../escalation/controller.js";
 import { startOperatorServer } from "../escalation/server.js";
+import { meetsApprovalBar, MIN_STABILITY_RUNS, STABILITY_APPROVAL_THRESHOLD } from "./confidence-policy.js";
 
 export type ReplayResult =
   | { status: "success"; outputs: Record<string, unknown>; evidenceDir: string; runId: string }
@@ -34,7 +35,13 @@ export interface ReplayOptions {
   operatorPort: number;
   /** Test-only hook: appends this query string to every navigate URL, used to demonstrate handling of an unexpected/injected state. Never used by real callers. */
   injectFaultQueryParam?: string;
-  /** Irreversible-write artifacts with status "draft" require this flag, so an unattended caller can't accidentally run an unapproved money-moving capability. */
+  /**
+   * Required to run unattended an artifact with status !== "approved" that
+   * either contains an irreversible step, or has recorded stability
+   * evidence (`confidence`, see replay/stability.ts) below the approval bar
+   * — so an unattended caller can't accidentally run an unapproved
+   * money-moving capability, or one that's already known to be flaky.
+   */
   confirmIrreversible?: boolean;
 }
 
@@ -68,8 +75,21 @@ export async function replayArtifact(
   // to a review screen (never clicks the real submit) is exactly as safe to
   // unattended-replay as a read-only one, so it shouldn't need approval.
   const hasIrreversibleStep = artifact.steps.some((s) => s.risk === "irreversible");
-  if (hasIrreversibleStep && artifact.status !== "approved" && !opts.confirmIrreversible) {
-    const message = `Artifact "${artifact.id}" v${artifact.version} contains an irreversible step and status="${artifact.status}" (not approved). Pass --confirm-irreversible to run it unattended anyway.`;
+  // Second, independent reason to require approval: recorded multi-run
+  // stability evidence (replay/stability.ts) below the bar. An artifact
+  // that's never been stability-tested clears this by default — the gate
+  // only tightens once real evidence of flakiness exists, it doesn't
+  // retroactively require every artifact to be stability-tested first.
+  const confidenceOk = meetsApprovalBar(artifact.confidence);
+  if ((hasIrreversibleStep || !confidenceOk) && artifact.status !== "approved" && !opts.confirmIrreversible) {
+    const reasons: string[] = [];
+    if (hasIrreversibleStep) reasons.push("contains an irreversible step");
+    if (!confidenceOk && artifact.confidence) {
+      reasons.push(
+        `stability score is ${(artifact.confidence.score * 100).toFixed(0)}% over ${artifact.confidence.runs} runs (bar: >= ${MIN_STABILITY_RUNS} runs, ${(STABILITY_APPROVAL_THRESHOLD * 100).toFixed(0)}% success)`
+      );
+    }
+    const message = `Artifact "${artifact.id}" v${artifact.version} ${reasons.join(" and ")} and status="${artifact.status}" (not approved). Pass --confirm-irreversible to run it unattended anyway.`;
     await logger.log("policy", { blocked: true, reason: message });
     return { status: "error", errorClass: "config_error", message, evidenceDir: logger.dir, runId };
   }

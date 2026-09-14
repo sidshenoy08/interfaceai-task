@@ -1,0 +1,26 @@
+{
+  "runs": 3,
+  "successes": 3,
+  "score": 1,
+  "results": [
+    {
+      "runId": "2026-09-14T22-33-52-087Z-p0pe04",
+      "status": "success",
+      "detail": "success",
+      "evidenceDir": "/Users/siddharthshenoy/Desktop/Personal Projects/interfaceai/evidence/replay-2026-09-14T22-33-52-087Z-p0pe04"
+    },
+    {
+      "runId": "2026-09-14T22-33-52-878Z-djao1m",
+      "status": "success",
+      "detail": "success",
+      "evidenceDir": "/Users/siddharthshenoy/Desktop/Personal Projects/interfaceai/evidence/replay-2026-09-14T22-33-52-878Z-djao1m"
+    },
+    {
+      "runId": "2026-09-14T22-33-53-139Z-pruc8t",
+      "status": "success",
+      "detail": "success",
+      "evidenceDir": "/Users/siddharthshenoy/Desktop/Personal Projects/interfaceai/evidence/replay-2026-09-14T22-33-53-139Z-pruc8t"
+    }
+  ],
+  "evidenceDir": "/Users/siddharthshenoy/Desktop/Personal Projects/interfaceai/evidence/stability-2026-09-14T22-33-52-083Z-2ui77a"
+}

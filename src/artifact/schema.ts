@@ -97,6 +97,24 @@ export const FieldSchema = z.object({
 });
 export type FieldT = z.infer<typeof FieldSchema>;
 
+// Evidence from a multi-run stability check (src/replay/stability.ts,
+// optional stretch goal — see /REPORT.md "Confidence & approval"): the same
+// artifact replayed with the same inputs, N times, with no LLM involved and
+// nothing about the artifact changing between runs. Because the target UI is
+// stable by the brief's own premise, a run that doesn't succeed isn't a
+// logic bug in the recording — it's exactly the kind of transient runtime
+// flakiness (a slow load racing a fixed timeout, a race on a rendered
+// element) that's otherwise invisible until a caller hits it in production.
+export const ConfidenceSchema = z.object({
+  score: z.number().min(0).max(1),
+  runs: z.number(),
+  successes: z.number(),
+  evaluatedAt: z.string(),
+  evaluatedWithInputs: z.record(z.string(), z.string()),
+  evidenceDir: z.string(),
+});
+export type ConfidenceT = z.infer<typeof ConfidenceSchema>;
+
 export const CapabilityArtifactSchema = z.object({
   id: z.string(),
   version: z.number(),
@@ -114,6 +132,7 @@ export const CapabilityArtifactSchema = z.object({
   checkpoints: z.array(CheckpointSchema),
   businessOutcomes: z.array(BusinessOutcomeSchema),
   interstitials: z.array(InterstitialSchema),
+  confidence: ConfidenceSchema.optional(),
   provenance: z.object({
     discoveryRunId: z.string(),
     model: z.string(),

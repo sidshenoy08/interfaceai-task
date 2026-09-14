@@ -1,0 +1,1 @@
+{"ts":"2026-09-14T22:34:05.116Z","runId":"2026-09-14T22-34-05-115Z-ytr9is","type":"policy","detail":{"blocked":true,"reason":"Artifact \"lookup-member-balance\" v1 stability score is 100% over 1 runs (bar: >= 3 runs, 100% success) and status=\"draft\" (not approved). Pass --confirm-irreversible to run it unattended anyway."}}

@@ -1,0 +1,4 @@
+{"ts":"2026-09-14T22:33:57.701Z","runId":"2026-09-14T22-33-57-700Z-8ox2em","type":"info","detail":{"event":"stability_start","capability":"open-savings-sub-account","version":1,"runs":3,"params":{"memberId":"12345","initialDeposit":"250"}}}
+{"ts":"2026-09-14T22:33:58.146Z","runId":"2026-09-14T22-33-57-700Z-8ox2em","type":"result","detail":{"event":"run_complete","run":0,"status":"success","detail":"success"}}
+{"ts":"2026-09-14T22:33:58.557Z","runId":"2026-09-14T22-33-57-700Z-8ox2em","type":"result","detail":{"event":"run_complete","run":1,"status":"success","detail":"success"}}
+{"ts":"2026-09-14T22:33:58.962Z","runId":"2026-09-14T22-33-57-700Z-8ox2em","type":"result","detail":{"event":"run_complete","run":2,"status":"success","detail":"success"}}

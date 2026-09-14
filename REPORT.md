@@ -46,6 +46,11 @@ contract**, not a step recording:
   (terminal-and-legitimate vs. recoverable-and-dismissible) — see Section 3.
 - `riskLevel` (category) and per-step `risk` (derived, see Section 6), plus `status: draft |
   approved` — versioned artifacts are stored as `<id>.v<N>.json` with a `<id>.latest.json` pointer.
+- `confidence` (optional): a multi-run replay success rate attached after the fact by the
+  stretch-goal stability check (Section 3) — score, run count, and which inputs it was measured
+  with. It's stored on the artifact itself, next to `status`, because both answer the same
+  question a calling agent needs answered before invoking a capability unattended: can I trust
+  this one to just run?
 
 Locators are the part I went deepest on, because. A step's `target` is a small ordered list
 of independent strategies (`role`, `css`, `text`, `tableCell`), tried in order at replay time until
@@ -95,6 +100,23 @@ Section 7 — and that simulation already exposed its own fragility: the LLM-cho
 isn't stable across runs of "the same" goal (`open-sub-account` vs. `open-savings-sub-account`
 were both produced for near-identical prompts), so id-keyed enrichment is brittle by construction.
 A real version would key off something a reviewer assigns, not model output.
+
+**Stretch goal: confidence & multi-run stability** (`replay/stability.ts`,
+`replay/confidence-policy.ts`). Replaying the same artifact with the same inputs should, by the
+brief's own premise that these UIs are stable, produce the same outcome every run — so a divergence
+across N identical replays isn't a logic bug in the recording, it's exactly the transient runtime
+flakiness (a slow load racing a fixed timeout, a race on a rendered element) Section 3 already
+argues is the real production failure mode here, just made measurable instead of anecdotal. `npm
+run stability` runs the artifact `N` times, turns the success rate into a `confidence` record
+(score, run count, which inputs were used, a link to the aggregate evidence dir) written back onto
+the artifact, and re-derives `status` from it via `decideApproval`. This *replaces* `harden.ts`'s
+original static approval heuristic ("no irreversible step ⇒ approved") with real replay evidence —
+but a clean score is necessary, not sufficient, for an irreversible-step artifact: reliability isn't
+the same axis as risk, so that class still requires an explicit human sign-off no matter how many
+runs pass (see Section 6). `replay/executor.ts`'s existing approval gate was extended, not
+replaced: it now blocks unattended replay for *either* an irreversible step *or* under-evidenced
+confidence, independently, with an artifact that's never been stability-tested defaulting to
+"unblocked" so the gate only tightens once real evidence of flakiness exists.
 
 ## 4. Heterogeneity & multi-tenant
 
@@ -167,8 +189,9 @@ covered by a unit test.
 
 An irreversible action requires the agent to call `confirm_intent` with matching text *before* the
 click executes; skipping straight to the click is blocked and the model is told why. At replay
-time, an artifact containing any step whose derived risk is `irreversible` requires `status:
-"approved"` or an explicit `--confirm-irreversible` flag to run unattended — gated on what the
+time, an artifact containing any step whose derived risk is `irreversible`, **or** carrying
+stability evidence below the approval bar (Section 3), requires `status: "approved"` or an explicit
+`--confirm-irreversible` flag to run unattended — gated on what the
 recording actually *does*, not on the capability's self-declared category, so a "reach the
 confirmation screen and stop" recording (no irreversible step) isn't penalized for being *about* an
 irreversible-sounding capability.
@@ -195,8 +218,9 @@ JSONL log.
 - **Operator console** is a bare form, not a co-browsing view.
 - **Assisted LLM fallback on replay failure** given a choice between spending remaining time on that 
   or on making the human-escalation path fully real, I chose the latter.
-- **Confidence/approval scoring** beyond the binary `draft`/`approved` gate, and **multi-run
-  stability** testing (stretch goals) — not attempted, in favor of depth on the required core.
+- **Code generation, agent-facing capability catalog, and cross-tenant canonicalization demo**
+  (stretch goals) — not attempted, in favor of depth on the one stretch goal I did pick
+  (confidence & multi-run stability, Section 3) plus the required core.
 - Small, honest gap: `open-savings-sub-account`'s discovery run never declared an output (e.g. the
   new account number) — a goal that asked for it explicitly would have produced one; nothing
   prevents it, it just wasn't asked for.

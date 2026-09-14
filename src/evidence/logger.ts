@@ -40,7 +40,7 @@ export class EvidenceLogger {
 
   constructor(
     public readonly runId: string,
-    kind: "discovery" | "replay"
+    kind: "discovery" | "replay" | "stability"
   ) {
     this.dir = path.resolve(process.cwd(), "evidence", `${kind}-${runId}`);
   }

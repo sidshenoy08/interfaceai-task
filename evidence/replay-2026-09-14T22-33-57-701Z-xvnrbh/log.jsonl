@@ -1,0 +1,11 @@
+{"ts":"2026-09-14T22:33:57.821Z","runId":"2026-09-14T22-33-57-701Z-xvnrbh","type":"info","detail":{"event":"replay_start","capability":"open-savings-sub-account","version":1,"params":{"memberId":"[REDACTED]","initialDeposit":250}}}
+{"ts":"2026-09-14T22:33:57.831Z","runId":"2026-09-14T22-33-57-701Z-xvnrbh","type":"action","detail":{"step":0,"action":"navigate","url":"http://localhost:4000/members"}}
+{"ts":"2026-09-14T22:33:57.844Z","runId":"2026-09-14T22-33-57-701Z-xvnrbh","type":"action","detail":{"step":1,"action":"type","strategyUsed":{"kind":"css","value":"[name=\"q\"]"},"value":"12345"}}
+{"ts":"2026-09-14T22:33:57.856Z","runId":"2026-09-14T22-33-57-701Z-xvnrbh","type":"action","detail":{"step":2,"action":"click","strategyUsed":{"kind":"role","role":"button","name":"Search"}}}
+{"ts":"2026-09-14T22:33:57.908Z","runId":"2026-09-14T22-33-57-701Z-xvnrbh","type":"action","detail":{"step":3,"action":"click","strategyUsed":{"kind":"role","role":"link","name":"View"}}}
+{"ts":"2026-09-14T22:33:57.947Z","runId":"2026-09-14T22-33-57-701Z-xvnrbh","type":"action","detail":{"step":4,"action":"click","strategyUsed":{"kind":"role","role":"link","name":"Open Sub-Account"}}}
+{"ts":"2026-09-14T22:33:57.993Z","runId":"2026-09-14T22-33-57-701Z-xvnrbh","type":"action","detail":{"step":5,"action":"select","strategyUsed":{"kind":"css","value":"[name=\"type\"]"},"value":"Savings"}}
+{"ts":"2026-09-14T22:33:57.998Z","runId":"2026-09-14T22-33-57-701Z-xvnrbh","type":"action","detail":{"step":6,"action":"type","strategyUsed":{"kind":"css","value":"[name=\"deposit\"]"},"value":"250"}}
+{"ts":"2026-09-14T22:33:58.001Z","runId":"2026-09-14T22-33-57-701Z-xvnrbh","type":"action","detail":{"step":7,"action":"click","strategyUsed":{"kind":"role","role":"button","name":"Continue"}}}
+{"ts":"2026-09-14T22:33:58.075Z","runId":"2026-09-14T22-33-57-701Z-xvnrbh","type":"action","detail":{"step":8,"action":"click","strategyUsed":{"kind":"role","role":"button","name":"Confirm and Open Account"}}}
+{"ts":"2026-09-14T22:33:58.123Z","runId":"2026-09-14T22-33-57-701Z-xvnrbh","type":"result","detail":{"event":"success","outputs":{}}}

@@ -1,0 +1,4 @@
+{"ts":"2026-09-14T22:34:11.180Z","runId":"2026-09-14T22-34-11-179Z-tj7pyr","type":"info","detail":{"event":"stability_start","capability":"lookup-member-balance","version":1,"runs":3,"params":{"memberId":"12345"}}}
+{"ts":"2026-09-14T22:34:11.486Z","runId":"2026-09-14T22-34-11-179Z-tj7pyr","type":"result","detail":{"event":"run_complete","run":0,"status":"success","detail":"success"}}
+{"ts":"2026-09-14T22:34:11.796Z","runId":"2026-09-14T22-34-11-179Z-tj7pyr","type":"result","detail":{"event":"run_complete","run":1,"status":"success","detail":"success"}}
+{"ts":"2026-09-14T22:34:12.079Z","runId":"2026-09-14T22-34-11-179Z-tj7pyr","type":"result","detail":{"event":"run_complete","run":2,"status":"success","detail":"success"}}

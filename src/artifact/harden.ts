@@ -60,6 +60,13 @@ export function enrichArtifact(artifact: CapabilityArtifact): CapabilityArtifact
   // category (see replay/executor.ts) — an "irreversible-write" capability
   // whose recorded steps never reach the real submit is as safe to
   // auto-approve as a read-only one.
+  //
+  // This is only the first pass at "approved", made at record time from
+  // static structure alone. It isn't the last word: once an artifact has
+  // been replayed multiple times with fixed inputs, replay/stability.ts's
+  // `decideApproval` re-derives status from actual replay evidence (a
+  // measured success rate, not a guess) and can promote or demote it
+  // independently — see /REPORT.md, "Confidence & approval".
   const hasIrreversibleStep = artifact.steps.some((s) => s.risk === "irreversible");
   const status = hasIrreversibleStep ? "draft" : "approved";
   return { ...artifact, businessOutcomes, interstitials, status };

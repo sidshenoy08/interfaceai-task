@@ -7,6 +7,7 @@
     "target-app": "tsx src/target-app/server.ts",
     "discover": "tsx src/cli.ts discover",
     "replay": "tsx src/cli.ts replay",
+    "stability": "tsx src/cli.ts stability",
     "build": "tsc -p .",
     "test": "tsx --test"
   },
