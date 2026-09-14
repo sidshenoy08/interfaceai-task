@@ -1,7 +1,0 @@
-{"ts":"2026-09-14T22:33:53.222Z","runId":"2026-09-14T22-33-53-139Z-pruc8t","type":"info","detail":{"event":"replay_start","capability":"lookup-member-balance","version":1,"params":{"memberId":"[REDACTED]"}}}
-{"ts":"2026-09-14T22:33:53.233Z","runId":"2026-09-14T22-33-53-139Z-pruc8t","type":"action","detail":{"step":0,"action":"navigate","url":"http://localhost:4000/members"}}
-{"ts":"2026-09-14T22:33:53.248Z","runId":"2026-09-14T22-33-53-139Z-pruc8t","type":"action","detail":{"step":1,"action":"type","strategyUsed":{"kind":"css","value":"[name=\"q\"]"},"value":"12345"}}
-{"ts":"2026-09-14T22:33:53.257Z","runId":"2026-09-14T22-33-53-139Z-pruc8t","type":"action","detail":{"step":2,"action":"click","strategyUsed":{"kind":"role","role":"button","name":"Search"}}}
-{"ts":"2026-09-14T22:33:53.309Z","runId":"2026-09-14T22-33-53-139Z-pruc8t","type":"action","detail":{"step":3,"action":"click","strategyUsed":{"kind":"role","role":"link","name":"View"}}}
-{"ts":"2026-09-14T22:33:53.349Z","runId":"2026-09-14T22-33-53-139Z-pruc8t","type":"action","detail":{"step":4,"action":"extract_text","strategyUsed":{"kind":"tableCell","rowLabel":"Savings Balance","columnIndex":1},"extractAs":"savingsBalance"}}
-{"ts":"2026-09-14T22:33:53.350Z","runId":"2026-09-14T22-33-53-139Z-pruc8t","type":"result","detail":{"event":"success","outputs":{"savingsBalance":"$4321.55"}}}

@@ -160,10 +160,15 @@ covering every path described above:
 | `replay-...-kptkf7` | `open-savings-sub-account` — business outcome (`invalid_deposit`), approved via `--confirm-irreversible` |
 | `replay-...-s0u87f` | `open-savings-sub-account` — full success, actually opens the account |
 
-Also present, from the stability/confidence demo above: four `evidence/stability-.../report.json`
-runs (a 3/3 approval, a 3/3 that stays `draft` because it's irreversible, a 1-run demotion, and the
-re-approval after another 3/3), plus one more `evidence/replay-.../` showing the resulting
-`config_error` block on an unattended replay of the demoted artifact.
+Also present, from the stability/confidence demo above — three `evidence/stability-.../report.json`
+runs, each with its own child `evidence/replay-.../` dirs:
+
+| Directory | What it shows |
+|---|---|
+| `stability-...-8ox2em` | `open-savings-sub-account` — 3/3 clean runs, stays `draft` (irreversible step; reliability alone doesn't approve it) |
+| `stability-...-vgmfhu` | `lookup-member-balance` — a single clean run isn't enough evidence: demotes a previously-`approved` artifact back to `draft` |
+| `replay-...-ytr9is` | `lookup-member-balance` unattended replay attempt right after the demotion above — blocked with `config_error` |
+| `stability-...-tj7pyr` | `lookup-member-balance` — 3/3 clean runs, restores `approved` (this is the state the committed artifact is currently in) |
 
 `/artifacts` contains the two saved capability artifacts referenced above, now carrying a
 `confidence` block from the stability runs.
