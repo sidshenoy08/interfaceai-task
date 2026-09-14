@@ -1,0 +1,10 @@
+{"ts":"2026-09-14T01:37:00.999Z","runId":"2026-09-14T01-36-59-930Z-kptkf7","type":"info","detail":{"event":"replay_start","capability":"open-savings-sub-account","version":1,"params":{"memberId":"[REDACTED]","initialDeposit":5}}}
+{"ts":"2026-09-14T01:37:01.076Z","runId":"2026-09-14T01-36-59-930Z-kptkf7","type":"action","detail":{"step":0,"action":"navigate","url":"http://localhost:4000/members"}}
+{"ts":"2026-09-14T01:37:01.110Z","runId":"2026-09-14T01-36-59-930Z-kptkf7","type":"action","detail":{"step":1,"action":"type","strategyUsed":{"kind":"css","value":"[name=\"q\"]"},"value":"12345"}}
+{"ts":"2026-09-14T01:37:01.167Z","runId":"2026-09-14T01-36-59-930Z-kptkf7","type":"action","detail":{"step":2,"action":"click","strategyUsed":{"kind":"role","role":"button","name":"Search"}}}
+{"ts":"2026-09-14T01:37:01.226Z","runId":"2026-09-14T01-36-59-930Z-kptkf7","type":"action","detail":{"step":3,"action":"click","strategyUsed":{"kind":"role","role":"link","name":"View"}}}
+{"ts":"2026-09-14T01:37:01.282Z","runId":"2026-09-14T01-36-59-930Z-kptkf7","type":"action","detail":{"step":4,"action":"click","strategyUsed":{"kind":"role","role":"link","name":"Open Sub-Account"}}}
+{"ts":"2026-09-14T01:37:01.317Z","runId":"2026-09-14T01-36-59-930Z-kptkf7","type":"action","detail":{"step":5,"action":"select","strategyUsed":{"kind":"css","value":"[name=\"type\"]"},"value":"Savings"}}
+{"ts":"2026-09-14T01:37:01.323Z","runId":"2026-09-14T01-36-59-930Z-kptkf7","type":"action","detail":{"step":6,"action":"type","strategyUsed":{"kind":"css","value":"[name=\"deposit\"]"},"value":"5"}}
+{"ts":"2026-09-14T01:37:01.327Z","runId":"2026-09-14T01-36-59-930Z-kptkf7","type":"action","detail":{"step":7,"action":"click","strategyUsed":{"kind":"role","role":"button","name":"Continue"}}}
+{"ts":"2026-09-14T01:37:01.368Z","runId":"2026-09-14T01-36-59-930Z-kptkf7","type":"result","detail":{"event":"business_outcome","outcome":"invalid_deposit"}}

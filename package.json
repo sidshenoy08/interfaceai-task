@@ -1,0 +1,27 @@
+{
+  "name": "computer-use-automation-system",
+  "version": "1.0.0",
+  "description": "Discover, record, and deterministically replay UI automation capabilities for legacy back-office applications.",
+  "type": "module",
+  "scripts": {
+    "target-app": "tsx src/target-app/server.ts",
+    "discover": "tsx src/cli.ts discover",
+    "replay": "tsx src/cli.ts replay",
+    "build": "tsc -p .",
+    "test": "tsx --test"
+  },
+  "license": "UNLICENSED",
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "openai": "^7.15.0",
+    "playwright": "^1.63.0",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^26.5.1",
+    "tsx": "^4.23.13",
+    "typescript": "^7.0.2"
+  }
+}

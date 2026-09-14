@@ -1,0 +1,182 @@
+{
+  "id": "lookup-member-balance",
+  "version": 1,
+  "status": "approved",
+  "name": "Lookup Member Balance",
+  "description": "Look up a member by ID and read their current savings balance.",
+  "target": {
+    "app": "core-banking-demo",
+    "baseUrl": "http://localhost:4000/members"
+  },
+  "riskLevel": "read-only",
+  "inputs": [
+    {
+      "name": "memberId",
+      "type": "string",
+      "description": "The ID of the member to look up.",
+      "required": true,
+      "sensitive": true
+    }
+  ],
+  "outputs": [
+    {
+      "name": "savingsBalance",
+      "type": "string",
+      "description": "The current savings balance of the member.",
+      "required": true,
+      "sensitive": false
+    }
+  ],
+  "steps": [
+    {
+      "index": 0,
+      "action": "navigate",
+      "description": "Navigate to http://localhost:4000/members",
+      "url": {
+        "literal": "http://localhost:4000/members"
+      },
+      "risk": "read-only",
+      "requiresConfirmation": false
+    },
+    {
+      "index": 1,
+      "action": "type",
+      "description": "Type into \"q\"",
+      "target": {
+        "strategies": [
+          {
+            "kind": "role",
+            "role": "textbox",
+            "name": "q"
+          },
+          {
+            "kind": "text",
+            "value": "q"
+          },
+          {
+            "kind": "css",
+            "value": "[name=\"q\"]"
+          }
+        ]
+      },
+      "value": {
+        "param": "memberId"
+      },
+      "risk": "read-only",
+      "requiresConfirmation": false
+    },
+    {
+      "index": 2,
+      "action": "click",
+      "description": "Search for member by ID",
+      "target": {
+        "strategies": [
+          {
+            "kind": "role",
+            "role": "button",
+            "name": "Search"
+          },
+          {
+            "kind": "text",
+            "value": "Search"
+          }
+        ]
+      },
+      "risk": "read-only",
+      "requiresConfirmation": false
+    },
+    {
+      "index": 3,
+      "action": "click",
+      "description": "View member details for member ID 12345",
+      "target": {
+        "strategies": [
+          {
+            "kind": "role",
+            "role": "link",
+            "name": "View"
+          },
+          {
+            "kind": "text",
+            "value": "View"
+          }
+        ]
+      },
+      "risk": "read-only",
+      "requiresConfirmation": false
+    },
+    {
+      "index": 4,
+      "action": "extract_text",
+      "description": "Extract \"Savings Balance\" as savingsBalance",
+      "target": {
+        "strategies": [
+          {
+            "kind": "tableCell",
+            "rowLabel": "Savings Balance",
+            "columnIndex": 1
+          }
+        ]
+      },
+      "extractAs": "savingsBalance",
+      "risk": "read-only",
+      "requiresConfirmation": false
+    }
+  ],
+  "checkpoints": [
+    {
+      "afterStep": 4,
+      "description": "Member savings balance is displayed",
+      "assert": {
+        "kind": "textPresent",
+        "value": "Savings Balance"
+      },
+      "onFail": "escalate"
+    }
+  ],
+  "businessOutcomes": [
+    {
+      "name": "member_not_found",
+      "description": "The member id does not exist in the system.",
+      "detect": {
+        "kind": "textPresent",
+        "value": "No member record found"
+      }
+    },
+    {
+      "name": "access_restricted",
+      "description": "The member record exists but access is restricted.",
+      "detect": {
+        "kind": "textPresent",
+        "value": "Access to this member record is restricted"
+      }
+    }
+  ],
+  "interstitials": [
+    {
+      "name": "session_renewed",
+      "description": "An unexpected 'session renewed' interstitial that requires an extra confirm click before the recorded flow can continue.",
+      "detect": {
+        "kind": "textPresent",
+        "value": "Your session was silently renewed"
+      },
+      "dismiss": {
+        "action": "click",
+        "target": {
+          "strategies": [
+            {
+              "kind": "role",
+              "role": "link",
+              "name": "Continue"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "provenance": {
+    "discoveryRunId": "2026-09-14T01-24-10-031Z-93iigs",
+    "model": "gpt-4o",
+    "createdAt": "2026-09-14T01:24:21.932Z"
+  }
+}

@@ -1,0 +1,1 @@
+{"ts":"2026-09-14T01:36:52.426Z","runId":"2026-09-14T01-36-52-425Z-6hgel3","type":"policy","detail":{"blocked":true,"reason":"Artifact \"open-savings-sub-account\" v1 contains an irreversible step and status=\"draft\" (not approved). Pass --confirm-irreversible to run it unattended anyway."}}

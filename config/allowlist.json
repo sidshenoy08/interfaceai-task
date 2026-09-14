@@ -1,0 +1,6 @@
+{
+  "allowedOrigins": ["http://localhost:4000"],
+  "allowedActions": ["navigate", "click", "type", "select", "extract_text"],
+  "sensitiveFieldNames": ["ssn", "password", "token", "secret", "pin", "creditcard"],
+  "irreversibleHints": ["confirm and open account", "delete", "transfer funds", "close account"]
+}

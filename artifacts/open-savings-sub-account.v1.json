@@ -1,0 +1,222 @@
+{
+  "id": "open-savings-sub-account",
+  "version": 1,
+  "status": "draft",
+  "name": "Open Savings Sub-account",
+  "description": "Opens a new savings sub-account for a member with an initial deposit.",
+  "target": {
+    "app": "core-banking-demo",
+    "baseUrl": "http://localhost:4000/members"
+  },
+  "riskLevel": "irreversible-write",
+  "inputs": [
+    {
+      "name": "memberId",
+      "type": "string",
+      "description": "The ID of the member.",
+      "required": true,
+      "sensitive": true
+    },
+    {
+      "name": "initialDeposit",
+      "type": "number",
+      "description": "The initial deposit amount in USD.",
+      "required": true,
+      "sensitive": false
+    }
+  ],
+  "outputs": [],
+  "steps": [
+    {
+      "index": 0,
+      "action": "navigate",
+      "description": "Navigate to http://localhost:4000/members",
+      "url": {
+        "literal": "http://localhost:4000/members"
+      },
+      "risk": "read-only",
+      "requiresConfirmation": false
+    },
+    {
+      "index": 1,
+      "action": "type",
+      "description": "Type into \"q\"",
+      "target": {
+        "strategies": [
+          {
+            "kind": "css",
+            "value": "[name=\"q\"]"
+          }
+        ]
+      },
+      "value": {
+        "param": "memberId"
+      },
+      "risk": "read-only",
+      "requiresConfirmation": false
+    },
+    {
+      "index": 2,
+      "action": "click",
+      "description": "Search for member 12345",
+      "target": {
+        "strategies": [
+          {
+            "kind": "role",
+            "role": "button",
+            "name": "Search"
+          },
+          {
+            "kind": "text",
+            "value": "Search"
+          }
+        ]
+      },
+      "risk": "read-only",
+      "requiresConfirmation": false
+    },
+    {
+      "index": 3,
+      "action": "click",
+      "description": "View member details for 12345",
+      "target": {
+        "strategies": [
+          {
+            "kind": "role",
+            "role": "link",
+            "name": "View"
+          },
+          {
+            "kind": "text",
+            "value": "View"
+          }
+        ]
+      },
+      "risk": "read-only",
+      "requiresConfirmation": false
+    },
+    {
+      "index": 4,
+      "action": "click",
+      "description": "Open a new savings sub-account",
+      "target": {
+        "strategies": [
+          {
+            "kind": "role",
+            "role": "link",
+            "name": "Open Sub-Account"
+          },
+          {
+            "kind": "text",
+            "value": "Open Sub-Account"
+          }
+        ]
+      },
+      "risk": "read-only",
+      "requiresConfirmation": false
+    },
+    {
+      "index": 5,
+      "action": "select",
+      "description": "Select \"Savings\" in \"type\"",
+      "target": {
+        "strategies": [
+          {
+            "kind": "css",
+            "value": "[name=\"type\"]"
+          }
+        ]
+      },
+      "value": {
+        "literal": "Savings"
+      },
+      "risk": "read-only",
+      "requiresConfirmation": false
+    },
+    {
+      "index": 6,
+      "action": "type",
+      "description": "Type into \"deposit\"",
+      "target": {
+        "strategies": [
+          {
+            "kind": "css",
+            "value": "[name=\"deposit\"]"
+          }
+        ]
+      },
+      "value": {
+        "param": "initialDeposit"
+      },
+      "risk": "read-only",
+      "requiresConfirmation": false
+    },
+    {
+      "index": 7,
+      "action": "click",
+      "description": "Continue to confirm sub-account opening",
+      "target": {
+        "strategies": [
+          {
+            "kind": "role",
+            "role": "button",
+            "name": "Continue"
+          },
+          {
+            "kind": "text",
+            "value": "Continue"
+          }
+        ]
+      },
+      "risk": "read-only",
+      "requiresConfirmation": false
+    },
+    {
+      "index": 8,
+      "action": "click",
+      "description": "Confirm and open sub-account",
+      "target": {
+        "strategies": [
+          {
+            "kind": "role",
+            "role": "button",
+            "name": "Confirm and Open Account"
+          },
+          {
+            "kind": "text",
+            "value": "Confirm and Open Account"
+          }
+        ]
+      },
+      "risk": "irreversible",
+      "requiresConfirmation": true
+    }
+  ],
+  "checkpoints": [
+    {
+      "afterStep": 8,
+      "description": "Sub-account successfully opened with account number 800001",
+      "assert": {
+        "kind": "textPresent",
+        "value": "Sub-Account Opened"
+      },
+      "onFail": "escalate"
+    }
+  ],
+  "businessOutcomes": [
+    {
+      "name": "invalid_deposit",
+      "description": "The requested initial deposit failed validation (below minimum, above maximum, or non-numeric).",
+      "detect": {
+        "kind": "textPresent",
+        "value": "Invalid initial deposit"
+      }
+    }
+  ],
+  "interstitials": [],
+  "provenance": {
+    "discoveryRunId": "2026-09-14T01-35-09-752Z-zaohwl",
+    "model": "gpt-4o",
+    "createdAt": "2026-09-14T01:35:42.349Z"
+  }
+}

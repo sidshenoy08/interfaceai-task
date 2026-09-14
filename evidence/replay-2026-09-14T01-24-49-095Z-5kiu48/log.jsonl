@@ -1,0 +1,5 @@
+{"ts":"2026-09-14T01:24:49.526Z","runId":"2026-09-14T01-24-49-095Z-5kiu48","type":"info","detail":{"event":"replay_start","capability":"lookup-member-balance","version":1,"params":{"memberId":"[REDACTED]"}}}
+{"ts":"2026-09-14T01:24:49.573Z","runId":"2026-09-14T01-24-49-095Z-5kiu48","type":"action","detail":{"step":0,"action":"navigate","url":"http://localhost:4000/members"}}
+{"ts":"2026-09-14T01:24:49.616Z","runId":"2026-09-14T01-24-49-095Z-5kiu48","type":"action","detail":{"step":1,"action":"type","strategyUsed":{"kind":"css","value":"[name=\"q\"]"},"value":"99999"}}
+{"ts":"2026-09-14T01:24:49.647Z","runId":"2026-09-14T01-24-49-095Z-5kiu48","type":"action","detail":{"step":2,"action":"click","strategyUsed":{"kind":"role","role":"button","name":"Search"}}}
+{"ts":"2026-09-14T01:24:49.712Z","runId":"2026-09-14T01-24-49-095Z-5kiu48","type":"result","detail":{"event":"business_outcome","outcome":"member_not_found"}}

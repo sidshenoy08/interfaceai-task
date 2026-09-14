@@ -1,0 +1,10 @@
+{"ts":"2026-09-14T01:28:34.610Z","runId":"2026-09-14T01-28-33-670Z-78ulif","type":"info","detail":{"event":"replay_start","capability":"lookup-member-balance","version":1,"params":{"memberId":"[REDACTED]"}}}
+{"ts":"2026-09-14T01:28:34.659Z","runId":"2026-09-14T01-28-33-670Z-78ulif","type":"action","detail":{"step":0,"action":"navigate","url":"http://localhost:4000/members"}}
+{"ts":"2026-09-14T01:28:34.749Z","runId":"2026-09-14T01-28-33-670Z-78ulif","type":"action","detail":{"step":1,"action":"type","strategyUsed":{"kind":"css","value":"[name=\"q\"]"},"value":"12345"}}
+{"ts":"2026-09-14T01:28:35.093Z","runId":"2026-09-14T01-28-33-670Z-78ulif","type":"action","detail":{"step":2,"action":"click","strategyUsed":{"kind":"role","role":"button","name":"Search"}}}
+{"ts":"2026-09-14T01:28:35.226Z","runId":"2026-09-14T01-28-33-670Z-78ulif","type":"action","detail":{"step":3,"action":"click","strategyUsed":{"kind":"role","role":"link","name":"View"}}}
+{"ts":"2026-09-14T01:28:35.325Z","runId":"2026-09-14T01-28-33-670Z-78ulif","type":"error","detail":{"step":4,"action":"extract_text","message":"Could not resolve any locator strategy. Tried 1: tableCell row=\"Savings Balance\" col=1 -> 0 match(es)"}}
+{"ts":"2026-09-14T01:30:05.517Z","runId":"2026-09-14T01-28-33-670Z-78ulif","type":"human_action","detail":{"actionType":"click","role":"link","name":"Retry"}}
+{"ts":"2026-09-14T01:30:25.304Z","runId":"2026-09-14T01-28-33-670Z-78ulif","type":"escalation","detail":{"event":"resumed_by_human","humanActions":[{"ts":"2026-09-14T01:30:05.517Z","action":"click","detail":{"role":"link","name":"Retry"}}]}}
+{"ts":"2026-09-14T01:30:25.331Z","runId":"2026-09-14T01-28-33-670Z-78ulif","type":"action","detail":{"step":4,"action":"extract_text","strategyUsed":{"kind":"tableCell","rowLabel":"Savings Balance","columnIndex":1},"extractAs":"savingsBalance"}}
+{"ts":"2026-09-14T01:30:25.334Z","runId":"2026-09-14T01-28-33-670Z-78ulif","type":"result","detail":{"event":"success","outputs":{"savingsBalance":"$4321.55"}}}
